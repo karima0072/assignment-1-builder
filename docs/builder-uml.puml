@@ -1,0 +1,86 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+hide empty members
+title Computer Configuration - Builder Pattern
+class Main {
+  +{static} main(args : String[]) : void
+}
+class ComputerConfiguration {
+  -processor : String {readOnly}
+  -ramGb : int {readOnly}
+  -storageGb : int {readOnly}
+  -operatingSystem : OperatingSystem {readOnly}
+  -graphicsCard : String {readOnly}
+  -powerSupplyWatts : int {readOnly}
+  -wifiEnabled : boolean {readOnly}
+  -bluetoothEnabled : boolean {readOnly}
+  -activeCooling : boolean {readOnly}
+  -rgbLighting : boolean {readOnly}
+  -monitor : Monitor {readOnly}
+  -ComputerConfiguration(builder : Builder)
+  +getProcessor() : String
+  +getRamGb() : int
+  +getStorageGb() : int
+  +getOperatingSystem() : OperatingSystem
+  +getGraphicsCard() : String
+  +getPowerSupplyWatts() : int
+  +isWifiEnabled() : boolean
+  +isBluetoothEnabled() : boolean
+  +isActiveCooling() : boolean
+  +isRgbLighting() : boolean
+  +getMonitor() : Monitor
+  +toString() : String
+}
+class "ComputerConfiguration.Builder" as Builder {
+  +Builder(processor : String, ramGb : int, storageGb : int, operatingSystem : OperatingSystem)
+  +withGraphicsCard(graphicsCard : String) : Builder
+  +withPowerSupply(powerSupplyWatts : int) : Builder
+  +enableWiFi() : Builder
+  +enableBluetooth() : Builder
+  +enableActiveCooling() : Builder
+  +enableRgbLighting() : Builder
+  +withMonitor(monitor : Monitor) : Builder
+  +build() : ComputerConfiguration
+  -validateRequiredFields() : void
+  -validateOptionalFields() : void
+  -hasDedicatedGraphics() : boolean
+  -validateDedicatedGraphics() : void
+  -validateMonitorCompatibility() : void
+}
+class ComputerConfigurationDirector {
+  +createOfficeComputer() : ComputerConfiguration
+  +createGamingComputer() : ComputerConfiguration
+  +createWorkstationComputer() : ComputerConfiguration
+}
+class Monitor {
+  -model : String {readOnly}
+  -refreshRateHz : int {readOnly}
+  -sizeInches : int {readOnly}
+  +Monitor(model : String, refreshRateHz : int, sizeInches : int)
+  +getModel() : String
+  +getRefreshRateHz() : int
+  +getSizeInches() : int
+  +toString() : String
+}
+enum OperatingSystem {
+  WINDOWS
+  LINUX
+}
+Main ..> Builder : custom configuration
+Main ..> ComputerConfigurationDirector : requests presets
+Main ..> ComputerConfiguration : prints
+ComputerConfigurationDirector ..> Builder : uses
+ComputerConfigurationDirector ..> Monitor : creates
+Builder ..> ComputerConfiguration : creates
+ComputerConfiguration "0..*" --> "0..1" Monitor : monitor
+ComputerConfiguration --> OperatingSystem : operatingSystem
+Builder --> "0..1" Monitor : selected monitor
+Builder --> OperatingSystem : required OS
+note bottom of Builder
+  Static nested class of ComputerConfiguration.
+  Holds required values and optional defaults.
+  Field list omitted here to avoid repetition.
+end note
+@enduml
+
