@@ -5,7 +5,7 @@ Language: Java 17+
 Submission: GitHub repository and report  
 Assessment: Individual defense
 
-GitHub repository: [ADD LINK HERE]
+GitHub repository: https://github.com/karima0072/assignment-1-builder
 
 ## 1. Problem and individual variant
 
